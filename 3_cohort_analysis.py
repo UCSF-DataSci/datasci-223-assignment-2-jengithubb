@@ -1,6 +1,26 @@
 import polars as pl
 import os
 
+def validate_and_clean(df: pl.LazyFrame) -> pl.LazyFrame:
+    required_columns = ["BMI", "Age", "Glucose"]
+
+    # 1. Ensure required columns exist
+    missing = [col for col in required_columns if col not in df.schema]
+    if missing:
+        raise ValueError(f"Missing required columns: {missing}")
+
+    # 2. Enforce correct types
+    df = df.with_columns([
+        pl.col("BMI").cast(pl.Int64),
+        pl.col("Age").cast(pl.Int64),
+        pl.col("Glucose").cast(pl.Int64)
+    ])
+
+    # 3. Drop rows with missing values
+    df = df.drop_nulls(required_columns)
+
+    return df
+
 def analyze_patient_cohorts(input_file: str) -> pl.DataFrame:
     """
     Analyze patient cohorts based on BMI ranges.
@@ -26,6 +46,8 @@ def analyze_patient_cohorts(input_file: str) -> pl.DataFrame:
     
     # Create a lazy query to analyze cohorts
     cohort_results = pl.scan_parquet("patients_large.parquet").pipe(
+        validate_and_clean
+    ).pipe(
         lambda df: df.filter((pl.col("BMI") >= 10) & (pl.col("BMI") <= 60))
     ).pipe(
         lambda df: df.select(["BMI", "Glucose", "Age"])

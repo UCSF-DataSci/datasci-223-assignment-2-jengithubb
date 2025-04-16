@@ -81,7 +81,7 @@ def clean_patient_data(patients):
     
     # BUG: Typo in key 'nage' instead of 'name'
     # FIX: Changed nage to name
-    df['name'] = df['name'].str.title()
+    df['name1'] = df['name1'].str.title()
 
     # BUG: Wrong method name (fill_na vs fillna)
     # FIX: Changed fill_na to fillna
@@ -131,7 +131,7 @@ def main():
     for patient in cleaned_patients:
         # BUG: Using 'name' key but we changed it to 'nage'
         # FIX: The above typo has been fixed
-        print(f"Name: {patient['name']}, Age: {patient['age']}, Diagnosis: {patient['diagnosis']}")
+        print(f"Name: {patient['name1']}, Age: {patient['age']}, Diagnosis: {patient['diagnosis']}")
     
     # Return the cleaned data (useful for testing)
     return cleaned_patients

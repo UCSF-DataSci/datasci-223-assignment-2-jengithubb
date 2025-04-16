@@ -81,7 +81,7 @@ def clean_patient_data(patients):
     
     # BUG: Typo in key 'nage' instead of 'name'
     # FIX: Changed nage to name
-    df['name1'] = df['name1'].str.title()
+    df['name'] = df['name'].str.title()
 
     # BUG: Wrong method name (fill_na vs fillna)
     # FIX: Changed fill_na to fillna

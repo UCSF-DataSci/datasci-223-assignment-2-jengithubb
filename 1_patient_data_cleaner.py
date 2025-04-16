@@ -116,7 +116,7 @@ def main():
     # FIX: If patient data load failed, return none
     patients = load_patient_data(data_path)
     if patients is None:
-        return None
+        return 1
     
     # Clean the patient data
     cleaned_patients = clean_patient_data(patients)
@@ -124,7 +124,7 @@ def main():
     # BUG: No check if cleaned_patients is None
     # FIX: If cleaned_patients is none, then return
     if cleaned_patients is None:
-        return None
+        return 1
     
     # Print the cleaned patient data
     print("Cleaned Patient Data:")

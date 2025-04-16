@@ -40,6 +40,7 @@ Usage:
 
 import json
 import os
+import pandas as pd
 
 def load_patient_data(filepath):
     """
@@ -52,8 +53,13 @@ def load_patient_data(filepath):
         list: List of patient dictionaries
     """
     # BUG: No error handling for file not found
-    with open(filepath, 'r') as file:
-        return json.load(file)
+    # FIX: Added try-except block to handle FileNotFoundError and return None
+    try:
+        with open(filepath, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+       print(f"Error: File not found: {filepath}.")
+       return None
 
 def clean_patient_data(patients):
     """
@@ -70,27 +76,33 @@ def clean_patient_data(patients):
         list: Cleaned list of patient dictionaries
     """
     cleaned_patients = []
+    # Transform the dictionary into a dataframe
+    df = pd.DataFrame(patients)
     
-    for patient in patients:
-        # BUG: Typo in key 'nage' instead of 'name'
-        patient['nage'] = patient['name'].title()
-        
-        # BUG: Wrong method name (fill_na vs fillna)
-        patient['age'] = patient['age'].fill_na(0)
-        
-        # BUG: Wrong method name (drop_duplcates vs drop_duplicates)
-        patient = patient.drop_duplcates()
-        
-        # BUG: Wrong comparison operator (= vs ==)
-        if patient['age'] = 18:
-            # BUG: Logic error - keeps patients under 18 instead of filtering them out
-            cleaned_patients.append(patient)
-    
+    # BUG: Typo in key 'nage' instead of 'name'
+    # FIX: Changed nage to name
+    df['name'] = df['name'].str.title()
+
+    # BUG: Wrong method name (fill_na vs fillna)
+    # FIX: Changed fill_na to fillna
+    df['age'] = df['age'].fillna(0)
+
+    # BUG: Wrong method name (drop_duplcates vs drop_duplicates)
+    # FIX: Changed duplcates to duplicates
+    df = df.drop_duplicates()
+
+    # BUG: Wrong comparison operator (= vs ==)
+    # FIX: Used >= instead of == since we want to keep all the patients under 18
+    df_over_18 = df[df['age'].astype(int) >= 18]
+    # BUG: Logic error - keeps patients under 18 instead of filtering them out
+    cleaned_data = df_over_18.to_dict(orient='records')
+
     # BUG: Missing return statement for empty list
-    if not cleaned_patients:
+    # FIX: If cleaned_data is empty, return None, else return the dictionary
+    if not cleaned_data:
         return None
     
-    return cleaned_patients
+    return cleaned_data
 
 def main():
     """Main function to run the script."""
@@ -99,18 +111,26 @@ def main():
     
     # Construct the path to the data file
     data_path = os.path.join(script_dir, 'data', 'raw', 'patients.json')
-    
+
     # BUG: No error handling for load_patient_data failure
+    # FIX: If patient data load failed, return none
     patients = load_patient_data(data_path)
+    if patients is None:
+        return None
     
     # Clean the patient data
     cleaned_patients = clean_patient_data(patients)
     
     # BUG: No check if cleaned_patients is None
+    # FIX: If cleaned_patients is none, then return
+    if cleaned_patients is None:
+        return None
+    
     # Print the cleaned patient data
     print("Cleaned Patient Data:")
     for patient in cleaned_patients:
         # BUG: Using 'name' key but we changed it to 'nage'
+        # FIX: The above typo has been fixed
         print(f"Name: {patient['name']}, Age: {patient['age']}, Diagnosis: {patient['diagnosis']}")
     
     # Return the cleaned data (useful for testing)

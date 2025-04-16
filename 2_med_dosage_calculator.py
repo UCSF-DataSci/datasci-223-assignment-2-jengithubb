@@ -239,12 +239,12 @@ def main():
    # BUG: No error handling for load_patient_data failure
    patients = load_patient_data(data_path)
    if patients == None:
-       return None
+       return 1
   
    # Calculate dosages for all patients
    patients_with_dosages, total_medication = calculate_all_dosages(patients)
    if patients_with_dosages is None or total_medication is None:
-       return None
+       return 1
    
    # Print the dosage information
    print("Medication Dosages:")
@@ -252,7 +252,7 @@ def main():
        # BUG: No check if required keys exist
        # FIX: Add if statement to check if the keys exist. if not, return with error
        if patient.get('name') is None or patient.get('name') is None or patient.get('name') is None or patient.get('name') is None:
-           return None
+           return 1
 
 
        print(f"Name: {patient['name']}, Medication: {patient['medication']}, "

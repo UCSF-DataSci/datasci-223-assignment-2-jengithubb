@@ -61,7 +61,7 @@ def main():
     if results is None:
         return 1
     # Print summary statistics
-    print("\nCohort Analysis Summary:")
+    print("\nCohort Analysis Results:")
     print(results)
 
 if __name__ == "__main__":

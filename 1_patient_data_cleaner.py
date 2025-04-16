@@ -85,7 +85,7 @@ def clean_patient_data(patients):
 
     # BUG: Wrong method name (fill_na vs fillna)
     # FIX: Changed fill_na to fillna
-    df['age'] = df['age'].fillna(0)
+    df['age'] = df['age'].fillna(0).astype(int)
 
     # BUG: Wrong method name (drop_duplcates vs drop_duplicates)
     # FIX: Changed duplcates to duplicates

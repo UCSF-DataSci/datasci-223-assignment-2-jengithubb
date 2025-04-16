@@ -4,19 +4,19 @@ import os
 def validate_and_clean(df: pl.LazyFrame) -> pl.LazyFrame:
     required_columns = ["BMI", "Age", "Glucose"]
 
-    # 1. Ensure required columns exist
+    # Make sure the wanted columns all exist in the dataset
     missing = [col for col in required_columns if col not in df.schema]
     if missing:
         raise ValueError(f"Missing required columns: {missing}")
 
-    # 2. Enforce correct types
+    # Make sure the columns' data are int
     df = df.with_columns([
         pl.col("BMI").cast(pl.Int64),
         pl.col("Age").cast(pl.Int64),
         pl.col("Glucose").cast(pl.Int64)
     ])
 
-    # 3. Drop rows with missing values
+    # Drop rows with missing values
     df = df.drop_nulls(required_columns)
 
     return df
@@ -46,6 +46,8 @@ def analyze_patient_cohorts(input_file: str) -> pl.DataFrame:
     
     # Create a lazy query to analyze cohorts
     cohort_results = pl.scan_parquet("patients_large.parquet").pipe(
+        #BUG: Does not have error handling
+        #FIX: Added a new error handling function to ensure the data coming in are valid
         validate_and_clean
     ).pipe(
         lambda df: df.filter((pl.col("BMI") >= 10) & (pl.col("BMI") <= 60))

@@ -183,7 +183,7 @@ def calculate_dosage(patient):
    # Add warnings based on medication
    warnings = []
    # BUG: Typos in medication names
-   # FIX: added e to epinephrin
+   # FIX: added e to epinephrin, fix the spelling of fentanyl
    if medication == "epinephrine":
        warnings.append("Monitor for arrhythmias")
    elif medication == "amiodarone":

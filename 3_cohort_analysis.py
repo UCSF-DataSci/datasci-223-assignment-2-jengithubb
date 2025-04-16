@@ -61,6 +61,8 @@ def main():
     if results is None:
         return 1
     # Print summary statistics
+    #BUG & FIX: In runtest, the expected output is Cohort Analysis Results, 
+    # the original string is Cohort Analysis Summary, replaced Summary with Results
     print("\nCohort Analysis Results:")
     print(results)
 

@@ -131,7 +131,7 @@ def main():
     for patient in cleaned_patients:
         # BUG: Using 'name' key but we changed it to 'nage'
         # FIX: The above typo has been fixed
-        print(f"Name: {patient['name1']}, Age: {patient['age']}, Diagnosis: {patient['diagnosis']}")
+        print(f"Patient name: {patient['name']}, Age: {patient['age']}, Diagnosis: {patient['diagnosis']}")
     
     # Return the cleaned data (useful for testing)
     return cleaned_patients
